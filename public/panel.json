@@ -1,0 +1,79 @@
+[
+  {
+    "label": "Champion select settings",
+    "name": "champion_select_settings",
+    "inputs": [
+      {
+        "type": "image",
+        "name": "champion_select_image",
+        "label": "Champion select bottom image"
+      },
+      {
+        "type": "image",
+        "name": "tournament_image",
+        "label": "Tournament image"
+      },
+      {
+        "type": "text",
+        "name": "tournament_title",
+        "label": "Tournament title"
+      },
+      {
+        "type": "text",
+        "name": "tournament_right_text",
+        "label": "Tournament right text"
+      },
+      {
+        "type": "checkbox",
+        "name": "hide_player_avatars",
+        "label": "Hide player avatars"
+      },
+      {
+        "type": "checkbox",
+        "name": "show_player_positions",
+        "label": "Show player position icons (top, jungle, middle, bottom, support)"
+      }
+    ]
+  },
+  {
+    "label": "In-game settings",
+    "name": "ingame_settings",
+    "inputs": [
+      {
+        "type": "player",
+        "name": "left_player_preview",
+        "label": "Player to preview on the left side"
+      },
+      {
+        "type": "player",
+        "name": "right_player_preview",
+        "label": "Player to preview on the right side"
+      },
+      {
+        "type": "image",
+        "name": "bottom_left_image",
+        "label": "Bottom left image (290x101 box)"
+      },
+      {
+        "type": "image",
+        "name": "center_image",
+        "label": "Bottom center image 1"
+      },
+      {
+        "type": "image",
+        "name": "center_image_2",
+        "label": "Bottom center image 2"
+      },
+      {
+        "type": "image",
+        "name": "center_image_3",
+        "label": "Bottom center image 3"
+      },
+      {
+        "type": "checkbox",
+        "name": "hide_top_bar",
+        "label": "Hide top bar"
+      }
+    ]
+  }
+]

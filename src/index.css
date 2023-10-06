@@ -1,0 +1,200 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /*background-image: url('./assets/bg.png');/**/
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  font-weight: 300;
+  src: local('Titillium Web'), url('./fonts/TitilliumWeb-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  font-weight: 600;
+  src: local('Titillium Web'), url('./fonts/TitilliumWeb-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  font-weight: 700;
+  src: local('Titillium Web'), url('./fonts/TitilliumWeb-Bold.ttf') format('truetype');
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.layout {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.players {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  padding: 8px;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  padding: 8px;
+  align-self: flex-start;
+}
+
+:root {
+  --main-panel-color: rgba(12, 15, 18, 0.85);
+  --sub-panel-color: rgba(0, 0, 0, 0.83);
+  --white-dull: rgba(10, 5, 5, 0.25);
+  --white-full: rgba(250, 250, 250, 1);
+  --white-half: rgba(250, 250, 250, 0.5);
+  --color-gray: rgba(191, 191, 191, 1.0);
+  --color-moneys: #a7d32e;
+  --dev-purple: rgba(200, 0, 255, 1);
+  --color-t: #c19511;
+  --color-ct: #5788a8;
+  --color-new-t: #f0c941;
+  --color-new-ct: #5ab8f4;
+  --color-bomb: #f22222;
+  --color-defuse: #2222f2;
+}
+
+.addonState {
+  padding: 40px;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+}
+
+.player {
+  background-color: #00000070;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.playerInner {
+  flex: 1;
+}
+
+.playerAvatar {
+  width: 50px; 
+  height: 50px;
+  margin-right:16px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  background: transparent;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.playerAvatarImg {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.playerInfo {
+  display: flex;
+  font-family: monospace;
+}
+
+.game {
+  background-color: #00000080;
+  color: white;
+  padding: 30px;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.gameInfo {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.gameInfo.big {
+  display: flex;
+  flex-direction: column;
+}
+
+.gameInfoInner {
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.label {
+  flex: 1;
+  font-weight: bold;
+}
+
+.label.big {
+  font-size: 24px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.label.big.alt {
+  text-transform: none;
+}
+
+.event {
+  background-color: #00000080;
+  color: white;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 8px;
+  height: 30px;
+}
+
+.eventInfo {
+  color: white;
+}
+
+.sidePick {
+  color: white;
+  flex: 1;
+}
+
+.sidePickInfo {
+  background-color: #00000050;
+  padding: 8px 24px;
+  border-radius: 8px;
+  margin: 12px;
+  min-width: 450px;
+}
+

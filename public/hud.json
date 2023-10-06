@@ -1,0 +1,13 @@
+{
+  "name": "Lexogrine LoL Default HUD",
+  "version": "1.0.0",
+  "author": "Lexogrine",
+  "legacy": false,
+  "radar": true,
+  "game": "leagueoflegends",
+  "killfeed": true,
+  "boltobserv": {
+    "css": true,
+    "maps": true
+  }
+}
