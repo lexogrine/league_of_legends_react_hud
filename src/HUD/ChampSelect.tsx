@@ -253,6 +253,11 @@ const ChampSelect = (props: ChampSelectProps) => {
   const minutes = Math.floor(realTimeLeft / 60);
   const seconds = Math.floor(realTimeLeft % 60);
 
+  const bans = picks?.actions?.flat()?.filter(x => x.type === 'ban') || [];
+
+  const leftBans = bans.filter(ban => ban.isAllyAction);
+  const rightBans = bans.filter(ban => !ban.isAllyAction);
+
   return (
     <div className="champ-select">
       <div className="top-bar">
@@ -291,49 +296,41 @@ const ChampSelect = (props: ChampSelectProps) => {
           </div>
         </div>
       </div>
-      {!!picks && picks?.bans.numBans > 0 && (
+      {!!picks && bans.length > 0 && (
         <>
           <div className="ban-list">
-            {picks?.bans.myTeamBans.map((ban, i) => (
-              <div
+            {leftBans.map((ban, i) => {
+              if (!ban.completed) {
+                return <div className={`ban ${ban.isInProgress ? "awaiting" : "empty"}`} key={i}>
+                  {ban.isInProgress && <AwaitingDots />}
+                </div>
+              }
+              return <div
                 className="ban"
                 key={i}
                 style={{
-                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban]?.id}.png)`,
+                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban.championId]?.id}.png)`,
                 }}
               />
-            ))}
-            {[
-              ...Array(
-                (picks?.bans.numBans || 0) / 2 -
-                  (picks?.bans.myTeamBans.length || 0)
-              ),
-            ].map((_, i) => (
-              <div className={`ban ${i === 0 ? "awaiting" : "empty"}`} key={i}>
-                {i === 0 && <AwaitingDots />}
-              </div>
-            ))}
+            }
+            )}
           </div>
           <div className="ban-list right">
-            {picks?.bans.theirTeamBans.map((ban, i) => (
-              <div
+            {rightBans.map((ban, i) => {
+              if (!ban.completed) {
+                return <div className={`ban ${ban.isInProgress ? "awaiting" : "empty"}`} key={i}>
+                  {ban.isInProgress && <AwaitingDots />}
+                </div>
+              }
+              return <div
                 className="ban"
                 key={i}
                 style={{
-                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban]?.id}.png)`,
+                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban.championId]?.id}.png)`,
                 }}
               />
-            ))}
-            {[
-              ...Array(
-                (picks?.bans.numBans || 0) / 2 -
-                  (picks?.bans.theirTeamBans.length || 0)
-              ),
-            ].map((_, i) => (
-              <div className={`ban ${i === 0 ? "awaiting" : "empty"}`} key={i}>
-                {i === 0 && <AwaitingDots />}
-              </div>
-            ))}
+            }
+            )}
           </div>
         </>
       )}
