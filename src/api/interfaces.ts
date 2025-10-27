@@ -132,12 +132,13 @@ export interface LOLPicks {
     Array<{
       actorCellId: number;
       championId: number;
+      championIntent: number;
       completed: boolean;
       id: number;
       isAllyAction: boolean;
       isInProgress: boolean;
       pickTurn: number;
-      type: "ban" | "pick";
+      type: "ban" | "pick" | "ten_bans_reveal";
     }>
   >;
   allowBattleBoost: boolean;

@@ -3,17 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 import TeamBar from "./assets/TeamBar.svg";
 import TeamBarAlt from "./assets/TeamBarAlt.svg";
 
-import { default as Position1, default as Position4 } from "./assets/Position1or4.svg";
+import {
+  default as Position1,
+  default as Position4,
+} from "./assets/Position1or4.svg";
 import Position2 from "./assets/Position2.svg";
 import Position3 from "./assets/Position3.svg";
 import Position5 from "./assets/Position5.svg";
 
-import {
-  LHMMatch,
-  LHMPlayer,
-  LHMTeam,
-  LOLPicks
-} from "../api/interfaces";
+import { LHMMatch, LHMPlayer, LHMTeam, LOLPicks } from "../api/interfaces";
 
 const PositionImages = [Position1, Position2, Position3, Position4, Position5];
 
@@ -122,10 +120,7 @@ const SideArrow = ({ ban }: { ban?: boolean }) => (
     xmlns="http://www.w3.org/2000/svg"
     style={{ transform: "rotate(180deg)" }}
   >
-    <path
-      d="M30 17.5L0.75 0.612503L0.75 34.3875L30 17.5Z"
-      fill={"#FFFFFFEE"}
-    />
+    <path d="M30 17.5L0.75 0.612503L0.75 34.3875L30 17.5Z" fill={"#FFFFFFEE"} />
   </svg>
 );
 
@@ -156,6 +151,7 @@ interface ChampSelectProps {
   bottomImage?: string;
   hidePlayerAvatars?: boolean;
   showPositions?: boolean;
+  showChampionIntents: boolean;
 }
 
 const ChampSelect = (props: ChampSelectProps) => {
@@ -172,6 +168,7 @@ const ChampSelect = (props: ChampSelectProps) => {
     bottomImage,
     hidePlayerAvatars,
     showPositions,
+    showChampionIntents,
   } = props;
 
   const [dataDragonChampions, setDataDragonChampions] = useState<any>([]);
@@ -184,7 +181,9 @@ const ChampSelect = (props: ChampSelectProps) => {
     (picks?.timer.adjustedTimeLeftInPhase || 0) / 1000
   );
 
-  const inProgressAction = picks?.actions.flat().find((a) => a.isInProgress);
+  const inProgressAction = picks?.actions
+    .flat()
+    .find((a) => a.isInProgress && !a.completed);
   const inProgressActionSide = inProgressAction
     ? picks?.myTeam.find((p) => p.cellId === inProgressAction?.actorCellId)
       ? "my"
@@ -253,10 +252,31 @@ const ChampSelect = (props: ChampSelectProps) => {
   const minutes = Math.floor(realTimeLeft / 60);
   const seconds = Math.floor(realTimeLeft % 60);
 
-  const bans = picks?.actions?.flat()?.filter(x => x.type === 'ban') || [];
+  const bans = picks?.actions?.flat()?.filter((x) => x.type === "ban") || [];
 
-  const leftBans = bans.filter(ban => ban.isAllyAction);
-  const rightBans = bans.filter(ban => !ban.isAllyAction);
+  const leftBans = bans.filter((ban) => ban.isAllyAction);
+  const rightBans = bans.filter((ban) => !ban.isAllyAction);
+
+  const championImageOverrides: { [key: number]: string } = {
+    9: "FiddleSticks",
+  };
+
+  const getChampionImageNameByKey = (key: number) => {
+    return championImageOverrides[key] || dataDragonChampions[key]?.id;
+  };
+
+  const prettyTime = (minutes: number, seconds: number) => {
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  let phaseTitle = inProgressAction?.type || "";
+  let prettiedTime = prettyTime(minutes, seconds);
+  if (picks?.timer?.phase === "PLANNING") {
+    phaseTitle = "PLAN";
+  } else if (phaseTitle === "ten_bans_reveal") {
+    phaseTitle = "BAN";
+    prettiedTime = prettyTime(minutes, Math.max(0, seconds - 30));
+  }
 
   return (
     <div className="champ-select">
@@ -298,40 +318,67 @@ const ChampSelect = (props: ChampSelectProps) => {
       </div>
       {!!picks && bans.length > 0 && (
         <>
-          <div className="ban-list">
-            {leftBans.map((ban, i) => {
-              if (!ban.completed) {
-                return <div className={`ban ${ban.isInProgress ? "awaiting" : "empty"}`} key={i}>
-                  {ban.isInProgress && <AwaitingDots />}
+          {leftBans.length ? (
+            <div className="ban-list">
+              {leftBans.map((ban, i) => (
+                <div
+                  className={`ban`}
+                  key={i}
+                  style={
+                    ban.championId
+                      ? {
+                          backgroundImage: `url(dragontail/newest/img/champion/${getChampionImageNameByKey(
+                            ban.championId
+                          )}.png)`,
+                        }
+                      : {}
+                  }
+                >
+                  <div
+                    className={`${
+                      ban.isInProgress && picks?.timer?.phase !== "PLANNING"
+                        ? "awaiting"
+                        : ""
+                    }`}
+                  />
+                  <div className="dots">
+                    {ban.isInProgress && picks?.timer?.phase !== "PLANNING" && (
+                      <AwaitingDots />
+                    )}
+                  </div>
                 </div>
-              }
-              return <div
-                className="ban"
-                key={i}
-                style={{
-                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban.championId]?.id}.png)`,
-                }}
-              />
-            }
-            )}
-          </div>
-          <div className="ban-list right">
-            {rightBans.map((ban, i) => {
-              if (!ban.completed) {
-                return <div className={`ban ${ban.isInProgress ? "awaiting" : "empty"}`} key={i}>
-                  {ban.isInProgress && <AwaitingDots />}
+              ))}
+            </div>
+          ) : null}
+          {rightBans.length ? (
+            <div className="ban-list right">
+              {rightBans.map((ban, i) => (
+                <div
+                  className={`ban`}
+                  key={i}
+                  style={
+                    ban.championId
+                      ? {
+                          backgroundImage: `url(dragontail/newest/img/champion/${getChampionImageNameByKey(
+                            ban.championId
+                          )}.png)`,
+                        }
+                      : {}
+                  }
+                >
+                  <div
+                    className={`${
+                      ban.isInProgress && picks?.timer?.phase !== "PLANNING"
+                        ? "awaiting"
+                        : ban.championId !== 0
+                        ? ""
+                        : "empty"
+                    }`}
+                  />
                 </div>
-              }
-              return <div
-                className="ban"
-                key={i}
-                style={{
-                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban.championId]?.id}.png)`,
-                }}
-              />
-            }
-            )}
-          </div>
+              ))}
+            </div>
+          ) : null}
         </>
       )}
       <div className="bottom-section">
@@ -343,19 +390,27 @@ const ChampSelect = (props: ChampSelectProps) => {
               );
               const spell1 = dataDragonSummonerSpells[pick.spell1Id];
               const spell2 = dataDragonSummonerSpells[pick.spell2Id];
+              const isPicking =
+                picks?.timer?.phase !== "PLANNING" &&
+                inProgressAction?.type === "pick" &&
+                inProgressAction?.actorCellId === pick?.cellId;
+              const championId =
+                pick?.championId ||
+                (isPicking || showChampionIntents
+                  ? pick?.championPickIntent
+                  : 0) ||
+                -1;
               return (
                 <PlayerBox
                   key={i}
-                  championImage={dataDragonChampions[pick.championId]?.id}
+                  championImage={getChampionImageNameByKey(championId)}
                   position={i + 1}
                   showPosition={showPositions}
-                  picking={
-                    pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "pick"
-                  }
+                  picking={isPicking}
                   banning={
                     pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "ban"
+                    inProgressAction?.type === "ban" &&
+                    picks?.timer?.phase !== "PLANNING"
                   }
                   name={lhmPlayer?.username || pick.summonerName}
                   avatar={lhmPlayer?.avatar}
@@ -376,18 +431,26 @@ const ChampSelect = (props: ChampSelectProps) => {
               );
               const spell1 = dataDragonSummonerSpells[pick.spell1Id];
               const spell2 = dataDragonSummonerSpells[pick.spell2Id];
+              const isPicking =
+                picks?.timer?.phase !== "PLANNING" &&
+                inProgressAction?.type === "pick" &&
+                inProgressAction?.actorCellId === pick?.cellId;
+              const championId =
+                pick?.championId ||
+                (isPicking || showChampionIntents
+                  ? pick?.championPickIntent
+                  : 0) ||
+                -1;
               return (
                 <PlayerBox
-                  championImage={dataDragonChampions[pick.championId]?.id}
+                  championImage={getChampionImageNameByKey(championId)}
                   position={i + 1}
                   showPosition={showPositions}
-                  picking={
-                    pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "pick"
-                  }
+                  picking={isPicking}
                   banning={
                     pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "ban"
+                    inProgressAction?.type === "ban" &&
+                    picks?.timer?.phase !== "PLANNING"
                   }
                   name={lhmPlayer?.username || pick.summonerName}
                   avatar={lhmPlayer?.avatar}
@@ -430,24 +493,25 @@ const ChampSelect = (props: ChampSelectProps) => {
           </div>
           <div className="timer-box">
             <div className="left arrow">
-              {inProgressActionSide === "my" && (
-                <SideArrow ban={inProgressAction?.type === "ban"} />
-              )}
+              {inProgressActionSide === "my" &&
+                picks?.timer?.phase !== "PLANNING" &&
+                inProgressAction?.type !== "ten_bans_reveal" && (
+                  <SideArrow ban={inProgressAction?.type === "ban"} />
+                )}
             </div>
             <div
               className="phase"
               style={{ visibility: !!inProgressAction ? "visible" : "hidden" }}
             >
-              {`${inProgressAction?.type || "Final"} phase`}
+              {`${phaseTitle || "Final"} phase`}
             </div>
-            <div className="timer">
-              {minutes}:{seconds < 10 ? "0" : ""}
-              {seconds}
-            </div>
+            <div className="timer">{prettiedTime}</div>
             <div className="right arrow">
-              {inProgressActionSide === "their" && (
-                <SideArrow ban={inProgressAction?.type === "ban"} />
-              )}
+              {inProgressActionSide === "their" &&
+                picks?.timer?.phase !== "PLANNING" &&
+                inProgressAction?.type !== "ten_bans_reveal" && (
+                  <SideArrow ban={inProgressAction?.type === "ban"} />
+                )}
             </div>
           </div>
         </div>
