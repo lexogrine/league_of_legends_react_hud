@@ -30,6 +30,11 @@
       },
       {
         "type": "checkbox",
+        "name": "show_intents",
+        "label": "Show champion intents"
+      },
+      {
+        "type": "checkbox",
         "name": "show_player_positions",
         "label": "Show player position icons (top, jungle, middle, bottom, support)"
       }

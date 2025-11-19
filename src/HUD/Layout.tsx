@@ -83,6 +83,8 @@ const Layout = (props: Props) => {
     React.useState<boolean>(false);
   const [showPlayerPositions, setShowPlayerPositions] =
     React.useState<boolean>(false);
+  const [showChampionIntents, setShowChampionIntents] =
+    React.useState<boolean>(false);
 
   const updateLHMData = async () => {
     const lhmMatch = await lhmApi.match.getCurrent();
@@ -142,6 +144,7 @@ const Layout = (props: Props) => {
 
     props.configs.onChange((data: any) => {
       // console.log("Config change:", data);
+      if (!data) return;
 
       const left = data.ingame_settings?.left_player_preview?.player;
       const right = data.ingame_settings?.right_player_preview?.player;
@@ -176,6 +179,9 @@ const Layout = (props: Props) => {
       );
       setShowPlayerPositions(
         data.champion_select_settings?.show_player_positions || false
+      );
+      setShowChampionIntents(
+        data.champion_select_settings?.show_intents || false
       );
     });
 
@@ -219,6 +225,7 @@ const Layout = (props: Props) => {
         bottomImage={championSelectBottomImage || undefined}
         hidePlayerAvatars={hidePlayerAvatars}
         showPositions={showPlayerPositions}
+        showChampionIntents={showChampionIntents}
       />
     );
   }
