@@ -11,6 +11,7 @@ import Position2 from "./assets/Position2.svg";
 import Position3 from "./assets/Position3.svg";
 import Position5 from "./assets/Position5.svg";
 
+import { lolAssetsDataUrl } from "../api/api";
 import { LHMMatch, LHMPlayer, LHMTeam, LOLPicks } from "../api/interfaces";
 
 const PositionImages = [Position1, Position2, Position3, Position4, Position5];
@@ -74,7 +75,7 @@ const PlayerBox = ({
           className="champion"
           style={{
             backgroundImage: championImage
-              ? `url(dragontail/img/champion/centered/${championImage}_0.jpg)`
+              ? `url(${lolAssetsDataUrl}dragontail/img/champion/centered/${championImage}_0.jpg)`
               : undefined,
           }}
         />
@@ -85,7 +86,7 @@ const PlayerBox = ({
                 className="spell"
                 style={{
                   backgroundImage: spellImage
-                    ? `url(dragontail/newest/img/spell/${spellImage}.png)`
+                    ? `url(${lolAssetsDataUrl}dragontail/newest/img/spell/${spellImage}.png)`
                     : undefined,
                 }}
               />
@@ -200,7 +201,7 @@ const ChampSelect = (props: ChampSelectProps) => {
       setRealTimeLeft((t) => Math.max(t - 1, 0));
     }, 1000);
 
-    const dataDragonChampionsResult = fetch("champion.json");
+    const dataDragonChampionsResult = fetch(`${lolAssetsDataUrl}champion.json`);
     dataDragonChampionsResult
       .then((res) => res.json())
       .then((res) => {
@@ -217,7 +218,7 @@ const ChampSelect = (props: ChampSelectProps) => {
         console.error("Failed to load data dragon champions", err);
       });
 
-    const dataDragonSummonerSpellsResult = fetch("summoner.json");
+    const dataDragonSummonerSpellsResult = fetch(`${lolAssetsDataUrl}summoner.json`);
     dataDragonSummonerSpellsResult
       .then((res) => res.json())
       .then((res) => {
@@ -327,19 +328,18 @@ const ChampSelect = (props: ChampSelectProps) => {
                   style={
                     ban.championId
                       ? {
-                          backgroundImage: `url(dragontail/newest/img/champion/${getChampionImageNameByKey(
-                            ban.championId
-                          )}.png)`,
-                        }
+                        backgroundImage: `url(${lolAssetsDataUrl}dragontail/newest/img/champion/${getChampionImageNameByKey(
+                          ban.championId
+                        )}.png)`,
+                      }
                       : {}
                   }
                 >
                   <div
-                    className={`${
-                      ban.isInProgress && picks?.timer?.phase !== "PLANNING"
-                        ? "awaiting"
-                        : ""
-                    }`}
+                    className={`${ban.isInProgress && picks?.timer?.phase !== "PLANNING"
+                      ? "awaiting"
+                      : ""
+                      }`}
                   />
                   <div className="dots">
                     {ban.isInProgress && picks?.timer?.phase !== "PLANNING" && (
@@ -359,21 +359,20 @@ const ChampSelect = (props: ChampSelectProps) => {
                   style={
                     ban.championId
                       ? {
-                          backgroundImage: `url(dragontail/newest/img/champion/${getChampionImageNameByKey(
-                            ban.championId
-                          )}.png)`,
-                        }
+                        backgroundImage: `url(${lolAssetsDataUrl}dragontail/newest/img/champion/${getChampionImageNameByKey(
+                          ban.championId
+                        )}.png)`,
+                      }
                       : {}
                   }
                 >
                   <div
-                    className={`${
-                      ban.isInProgress && picks?.timer?.phase !== "PLANNING"
-                        ? "awaiting"
-                        : ban.championId !== 0
+                    className={`${ban.isInProgress && picks?.timer?.phase !== "PLANNING"
+                      ? "awaiting"
+                      : ban.championId !== 0
                         ? ""
                         : "empty"
-                    }`}
+                      }`}
                   />
                 </div>
               ))}

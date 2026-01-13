@@ -1,5 +1,5 @@
-import * as I from "./interfaces";
 import queryString from "query-string";
+import * as I from "./interfaces";
 
 const query = queryString.parseUrl(window.location.href).query;
 export const port = (query && Number(query.port)) || 1349;
@@ -9,7 +9,8 @@ export const isDev = !query.isProd;
 
 export const config = { apiAddress: isDev ? `http://localhost:${port}/` : "/" };
 export const lhmApiUrl = config.apiAddress;
-export const addonApiUrl = `http://localhost:${addonPort}/`;
+export const addonApiUrl = (queryString.parseUrl(window.location.href).url.split('/').slice(0, 3).join('/') + "/").replace(port.toString(), addonPort.toString());
+export const lolAssetsDataUrl = `${lhmApiUrl}static/additional-data/league-of-legends-assets/`;
 
 export const apiCall = async (
   apiUrl: string,
